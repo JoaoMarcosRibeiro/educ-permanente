@@ -1,0 +1,33 @@
+/* Estilos adicionais */
+body {
+  background-color: #f0f0f0;
+}
+
+.container {
+  text-align: center;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.navbar {
+  padding-left: 50px;
+  margin-bottom: 20px;
+  background-color: #1E90FF;
+  /* Cor de fundo azul */
+}
+
+.navbar-brand {
+  color: #ffffff !important;
+  /* Cor do texto branco */
+}
+
+.pagination {
+  justify-content: center;
+}
