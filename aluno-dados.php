@@ -116,13 +116,22 @@ $nomeCurso = mysqli_fetch_assoc($curso);
         </form>
         <ul class="list-group mt-3" id="lista-arquivos">
             <?php
-            // Verifica se o aluno tem arquivos associados
             if (!empty($arquivos)) {
-                // Itera sobre os arquivos associados ao aluno
-                foreach ($arquivos as $arquivo) {
+                // Obtém o número total de arquivos
+                $total_arquivos = count($arquivos);
+                // Itera sobre os arquivos associados à faculdade
+                foreach ($arquivos as $index => $arquivo) {
+                    // Ignora a exibição do último elemento na lista
+                    if ($index === $total_arquivos - 1) {
+                        continue;
+                    }
                     // Explode o caminho do arquivo para acessar o nome do arquivo (supondo que o nome do arquivo seja o último elemento após a separação por '/')
                     $nome_arquivo = explode("/", $arquivo);
-                    echo "<li class='list-group-item'><i class='far fa-file mr-2'></i><a href='servidor/cadastro/" . $arquivo . "' target='_blank'>{$nome_arquivo[count($nome_arquivo) - 1]}</a></li>";
+                    echo "<li class='list-group-item'>
+                    <i class='far fa-file mr-2'></i>
+                    <a href='servidor/cadastro/" . $arquivo . "' target='_blank'>{$nome_arquivo[count($nome_arquivo) - 1]}</a>
+                    <span class='remove-file-btn' data-file='{$arquivo}'><i class='fas fa-trash-alt'></i></span>
+                  </li>";
                 }
             } else {
                 echo "<li class='list-group-item'>Nenhum arquivo associado a este aluno.</li>";
@@ -160,6 +169,31 @@ $nomeCurso = mysqli_fetch_assoc($curso);
                         alert('Erro ao enviar arquivo: ' + error);
                     }
                 });
+            });
+
+            $(document).on('click', '.remove-file-btn', function () {
+                var arquivo = $(this).data('file'); // Obtém o nome do arquivo
+                var id_aluno = <?php echo $id_aluno; ?>; // Obtém o ID do aluno
+                var confirmar = confirm('Tem certeza de que deseja excluir este arquivo?');
+                if (confirmar) {
+                    $.ajax({
+                        url: 'servidor/cadastro/remove-arquivo-aluno.php',
+                        type: 'POST',
+                        data: { arquivo: arquivo, id: id_aluno }, // Envia o nome do arquivo e o ID do aluno
+                        success: function (response) {
+                            if (response === true) {
+                                console.log("Arquivo removido com sucesso.");
+                            } else {
+                                console.error("Erro ao remover arquivo:", response);
+                            }
+                            // Recarrega a lista de arquivos após a remoção bem-sucedida
+                            $('#lista-arquivos').load(location.href + ' #lista-arquivos');
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Erro ao remover arquivo: ' + error);
+                        }
+                    });
+                }
             });
         });
     </script>

@@ -105,15 +105,21 @@ if (!empty($faculdade['arquivo'])) {
             <?php
             // Verifica se o faculdade tem arquivos associados
             if (!empty($arquivos)) {
+                // Obtém o número total de arquivos
+                $total_arquivos = count($arquivos);
                 // Itera sobre os arquivos associados à faculdade
-                foreach ($arquivos as $arquivo) {
+                foreach ($arquivos as $index => $arquivo) {
+                    // Ignora a exibição do último elemento na lista
+                    if ($index === $total_arquivos - 1) {
+                        continue;
+                    }
                     // Explode o caminho do arquivo para acessar o nome do arquivo (supondo que o nome do arquivo seja o último elemento após a separação por '/')
                     $nome_arquivo = explode("/", $arquivo);
                     echo "<li class='list-group-item'>
-                            <i class='far fa-file mr-2'></i>
-                            <a href='servidor/cadastro/" . $arquivo . "' target='_blank'>{$nome_arquivo[count($nome_arquivo) - 1]}</a>
-                            <span class='remove-file-btn' data-file='{$arquivo}'><i class='fas fa-trash-alt'></i></span>
-                          </li>";
+                    <i class='far fa-file mr-2'></i>
+                    <a href='servidor/cadastro/" . $arquivo . "' target='_blank'>{$nome_arquivo[count($nome_arquivo) - 1]}</a>
+                    <span class='remove-file-btn' data-file='{$arquivo}'><i class='fas fa-trash-alt'></i></span>
+                  </li>";
                 }
             } else {
                 echo "<li class='list-group-item'>Nenhum arquivo associado a esta faculdade.</li>";
@@ -121,8 +127,6 @@ if (!empty($faculdade['arquivo'])) {
             ?>
         </ul>
     </div>
-    
-
     <!-- Adicionando jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Adicionando script de atualização de div -->
@@ -158,14 +162,20 @@ if (!empty($faculdade['arquivo'])) {
         $(document).ready(function () {
             // Função para remover o arquivo
             $(document).on('click', '.remove-file-btn', function () {
-                var arquivo = $(this).data('file'); // Obtém o caminho do arquivo                
-                var confirmar = confirm('Tem certeza de que deseja excluir este arquivo?');                
+                var arquivo = $(this).data('file'); // Obtém o caminho do arquivo
+                var id = <?= $id ?>;
+                var confirmar = confirm('Tem certeza de que deseja excluir este arquivo?');
                 if (confirmar) {
                     $.ajax({
                         url: 'servidor/cadastro/remove-arquivo-faculdade.php', // Define o URL de destino
                         type: 'POST', // Define o método de envio como POST
-                        data: { arquivo: arquivo, id: <?= $id ?> }, // Define os dados a serem enviados                        
+                        data: { arquivo: arquivo, id }, // Define os dados a serem enviados                        
                         success: function (response) {
+                            if (response === true) {
+                                console.log("Arquivo removido com sucesso.");
+                            } else {
+                                console.error("Erro ao remover arquivo:", response);
+                            }
                             // Exibir mensagem de sucesso
                             alert('Arquivo removido com sucesso');
                             // Recarregar a lista de arquivos após a remoção bem-sucedida

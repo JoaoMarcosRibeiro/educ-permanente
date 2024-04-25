@@ -14,8 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Instancia o objeto de controle
                 $Controle = new Controle();
 
-                if ($Controle->removeArquivoFaculdade($id, $arquivo)) {
-                    header("Location: ../../faculdade-dados?id=" . $id);
+                if ($Controle->removeArquivoAluno($id, $arquivo)) {
+                    header("Location: ../../aluno-dados?id=" . $id);
                     exit(); // Encerra o script para evitar a execução de código adicional
                 }
                 
