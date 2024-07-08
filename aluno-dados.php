@@ -1,4 +1,6 @@
-<?php
+<?php session_start();
+$email = $_SESSION['email'];
+
 include "classes/ConexaoBanco.php";
 
 // Recupera o ID do aluno da URL
@@ -7,6 +9,10 @@ $id_aluno = $_GET['id'];
 // Conecta ao banco de dados
 $conexao_banco = new ConexaoBanco();
 $conexao = $conexao_banco->conectar();
+
+$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$usuario = mysqli_query($conexao, $sqlUsuario);
+$dadosUsuario = mysqli_fetch_assoc($usuario);
 
 // Consulta para recuperar os dados do aluno
 $sql_aluno = "SELECT * FROM alunos WHERE id = $id_aluno";
@@ -26,6 +32,12 @@ $id_curso = $aluno["curso_id"];
 $sqlCurso = "SELECT * FROM cursos WHERE id = '$id_curso'";
 $curso = mysqli_query($conexao, $sqlCurso);
 $nomeCurso = mysqli_fetch_assoc($curso);
+$idCurso = $nomeCurso['id'];
+
+// Consulta para recuperar os dados da faculdade
+$sql = "SELECT * FROM faculdades WHERE id = '$idCurso'";
+$resultado = mysqli_query($conexao, $sql);
+$faculdade = mysqli_fetch_assoc($resultado);
 
 ?>
 <!DOCTYPE html>
@@ -41,6 +53,7 @@ $nomeCurso = mysqli_fetch_assoc($curso);
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Adicionando Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         /* Adicione seu CSS personalizado aqui */
         body {
@@ -73,8 +86,12 @@ $nomeCurso = mysqli_fetch_assoc($curso);
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <?php if ($dadosUsuario) { ?>
+            <a class="navbar-brand" href="faculdade-index">PAGINA INICIAL</a>
+        <?php } else { ?>
+            <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
+        <?php } ?>
     </nav>
     <div class="container">
         <h1 class="mt-4">Dados do Aluno</h1>
@@ -96,7 +113,7 @@ $nomeCurso = mysqli_fetch_assoc($curso);
                 </p>
                 </p>
                 <p class="card-text"><i class="fas fa-birthday-cake mr-2"></i><strong>Data de Nascimento:</strong>
-                    <?php echo $aluno['data_nascimento']; ?>
+                    <?php echo date('d/m/Y', strtotime($aluno['data_nascimento'])); ?>
                 </p>
                 <p class="card-text"><i class="fas fa-graduation-cap mr-2"></i><strong>Curso:</strong>
                     <?php echo $nomeCurso['nome']; ?>
@@ -129,15 +146,38 @@ $nomeCurso = mysqli_fetch_assoc($curso);
                     $nome_arquivo = explode("/", $arquivo);
                     echo "<li class='list-group-item'>
                     <i class='far fa-file mr-2'></i>
-                    <a href='servidor/cadastro/" . $arquivo . "' target='_blank'>{$nome_arquivo[count($nome_arquivo) - 1]}</a>
-                    <span class='remove-file-btn' data-file='{$arquivo}'><i class='fas fa-trash-alt'></i></span>
-                  </li>";
+                    <a href='servidor/cadastro/" . $arquivo . "' target='_blank'>{$nome_arquivo[count($nome_arquivo) - 1]}</a>";
+                    if (!$dadosUsuario) {
+                        echo " <span class='remove-file-btn' data-file='{$arquivo}'><i class='fas fa-trash-alt'></i></span>";
+                    }
+                    echo "</li>";
                 }
             } else {
                 echo "<li class='list-group-item'>Nenhum arquivo associado a este aluno.</li>";
             }
             ?>
         </ul>
+        <div class="editor-wrapper" <?php if ($dadosUsuario) { ?> style="display:none" <?php } ?>>
+            <h1 class="mb-4  text-center">Resposta</h1>
+            <form action="servidor/cadastro/resposta" method="POST" onsubmit="return updateEditorContent();"
+                style="max-width: 100%;">
+                <div id="editor-container" style=" height: 200px; border: 1px solid #ced4da; border-radius: .25rem;">
+                    <!-- O editor de texto será renderizado aqui -->
+                </div>
+                <input type='hidden' name='id' value='<?php $faculdade['id'] ?>'>
+                <input type="hidden" name="editor-content" id="editor-content">
+                <input type='hidden' name='email' value='<?php $faculdade['email'] ?>'>
+
+                <div class="form-row justify-content-center mt-4">
+                    <div class="form-group mr-3">
+                        <button type="submit" class="btn btn-primary">ENVIAR</button>
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-danger" onclick="history.go(-1);">VOLTAR</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Adicionando jQuery -->
@@ -196,6 +236,41 @@ $nomeCurso = mysqli_fetch_assoc($curso);
                 }
             });
         });
+    </script>
+
+    <!-- Inclua o JavaScript do Bootstrap e do Quill -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Inicialize o Quill no elemento com id 'editor-container'
+        var quill = new Quill('#editor-container', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    [{ 'indent': '-1' }, { 'indent': '+1' }],
+                    [{ 'direction': 'rtl' }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'font': [] }],
+                    [{ 'align': [] }],
+                    ['clean']
+                ]
+            },
+            placeholder: 'Escreva seu texto aqui...'
+        });
+
+        // Função para atualizar o conteúdo do editor no campo oculto
+        function updateEditorContent() {
+            var html = quill.root.innerHTML;
+            document.getElementById('editor-content').value = html;
+            return true;
+        }
     </script>
 </body>
 

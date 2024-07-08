@@ -1,3 +1,25 @@
+<?php session_start();
+$email = $_SESSION['email'];
+
+include "classes/ConexaoBanco.php";
+
+$conexaobanco = new ConexaoBanco();
+
+$conexao = $conexaobanco->conectar();
+
+$sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
+$faculdade = mysqli_query($conexao, $sqlFaculdade);
+$dadosFaculdade = mysqli_fetch_assoc($faculdade);
+$faculdadeId = $dadosFaculdade['id'];
+
+$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$usuario = mysqli_query($conexao, $sqlUsuario);
+$dadosUsuario = mysqli_fetch_assoc($usuario);
+
+if (!$dadosUsuario) {
+    header("location:login-faculdade");
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -14,8 +36,8 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <a class="navbar-brand" href="faculdade-index">PAGINA INICIAL</a>
     </nav>
     <div class="container">
         <h2>Lista de Cursos</h2>
@@ -38,11 +60,6 @@
             </thead>
             <tbody>
                 <?php
-                include "classes/ConexaoBanco.php";
-
-                $conexaobanco = new ConexaoBanco();
-
-                $conexao = $conexaobanco->conectar();
 
                 // Número de registros por página
                 $registros_por_pagina = 10;
@@ -54,7 +71,7 @@
                 $offset = ($pagina_atual - 1) * $registros_por_pagina;
 
                 // Consulta SQL para obter os dados com paginação
-                $sql = "SELECT * FROM Cursos LIMIT $registros_por_pagina OFFSET $offset";
+                $sql = "SELECT * FROM Cursos WHERE faculdade_id = '$faculdadeId' LIMIT $registros_por_pagina OFFSET $offset";
                 $result = $conexao->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -76,6 +93,42 @@
                 ?>
             </tbody>
         </table>
+        <!-- Paginação -->
+        <?php
+        // Consulta SQL para contar o total de registros
+        $sql_total = "SELECT COUNT(*) AS total FROM Cursos";
+        $resultado = $conexao->query($sql_total);
+        $total_registros = $resultado->fetch_assoc()['total'];
+
+        // Calcula o número total de páginas
+        $total_paginas = ceil($total_registros / $registros_por_pagina);
+
+        // Exibe a paginação apenas se houver mais de uma página
+        if ($total_paginas > 1) {
+            ?>
+            <nav aria-label="Navegação de página">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <?php if ($pagina_atual <= 1)
+                        echo 'disabled'; ?>">
+                        <a class="page-link" href="?pagina=<?php echo $pagina_atual - 1; ?>" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <?php
+                    // Exibe os links para as páginas
+                    for ($i = 1; $i <= $total_paginas; $i++) {
+                        echo "<li class='page-item " . ($pagina_atual == $i ? 'active' : '') . "'><a class='page-link' href='?pagina=" . $i . "'>" . $i . "</a></li>";
+                    }
+                    ?>
+                    <li class="page-item <?php if ($pagina_atual >= $total_paginas)
+                        echo 'disabled'; ?>">
+                        <a class="page-link" href="?pagina=<?php echo $pagina_atual + 1; ?>" aria-label="Próximo">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        <?php } ?>
     </div>
 </body>
 

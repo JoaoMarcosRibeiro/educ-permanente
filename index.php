@@ -1,3 +1,20 @@
+<?php session_start();
+$email = $_SESSION['email'];
+
+include "classes/ConexaoBanco.php";
+
+$conexaobanco = new ConexaoBanco();
+
+$conexao = $conexaobanco->conectar();
+
+$sqlUsuario = "SELECT * FROM usuarios WHERE email = '$email'";
+$usuario = mysqli_query($conexao, $sqlUsuario);
+$dadosUsuario = mysqli_fetch_assoc($usuario);
+
+if (!$dadosUsuario) {
+    header("location:login");
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -60,13 +77,18 @@
     }
 
     .list-group-item:nth-child(3) {
-      background-color: #dc3545; /* Vermelho */
+      background-color: #f59042; 
       color: #ffffff;
     }
 
     .list-group-item:nth-child(4) {
       background-color: #ffc107; /* Amarelo */
       color: #333333;
+    }
+
+    .list-group-item:nth-child(5) {
+      background-color: #dc3545; /* Vermelho */
+      color: #ffffff;
     }
 
     .list-group-item:nth-child(1):hover {
@@ -78,11 +100,14 @@
     }
 
     .list-group-item:nth-child(3):hover {
-      background-color: #b93134; /* Vermelho mais escuro */
+      background-color: #f27b1f; 
     }
 
     .list-group-item:nth-child(4):hover {
       background-color: #ffaa00; /* Amarelo mais escuro */
+    }
+    .list-group-item:nth-child(5):hover {
+      background-color: #b93134; /* Vermelho mais escuro */
     }
   </style>
 </head>
@@ -93,9 +118,10 @@
       <h2>EDUCAÇÃO PERMANENTE</h2>
       <div class="list-group">
         <a href="faculdade" class="list-group-item list-group-item-action">FACULDADE</a>
-        <a href="curso" class="list-group-item list-group-item-action">CURSOS</a>
-        <a href="aluno" class="list-group-item list-group-item-action">ALUNOS</a>
-        <a href="#" class="list-group-item list-group-item-action">Opção 4</a>
+        <a href="cursos" class="list-group-item list-group-item-action">CURSOS</a>
+        <a href="alunos" class="list-group-item list-group-item-action">ALUNOS</a>
+        <a href="cadastro-usuario" class="list-group-item list-group-item-action">CADASTRAR USUÁRIO</a>
+        <a href="servidor/login/logout.php" class="list-group-item list-group-item-action">SAIR</a>
       </div>
     </div>
   </div>

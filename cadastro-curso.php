@@ -1,4 +1,6 @@
-<?php
+<?php session_start();
+$email = $_SESSION['email'];
+
 include "classes/ConexaoBanco.php";
 
 $conexaobanco = new ConexaoBanco();
@@ -6,8 +8,16 @@ $conexaobanco = new ConexaoBanco();
 $conexao = $conexaobanco->conectar();
 
 $sql = "SELECT * FROM faculdades ORDER BY nome ASC";
-$cursos = mysqli_query($conexao, $sql);
-$total = mysqli_num_rows($cursos);
+$faculdades = mysqli_query($conexao, $sql);
+$total = mysqli_num_rows($faculdades);
+
+$sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
+$faculdade = mysqli_query($conexao, $sqlFaculdade);
+$dadosFaculdade = mysqli_fetch_assoc($faculdade);
+
+$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$usuario = mysqli_query($conexao, $sqlUsuario);
+$dadosUsuario = mysqli_fetch_assoc($usuario);
 
 ?>
 <!DOCTYPE html>
@@ -16,15 +26,19 @@ $total = mysqli_num_rows($cursos);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Cadastro de Curso</title>  
+    <title>Cadastro de Curso</title>
     <link rel="shortcut icon" href="img/faculdade.png">
     <link href="styles/style.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <?php if ($dadosUsuario) { ?>
+            <a class="navbar-brand" href="faculdade-index">PAGINA INICIAL</a>
+        <?php } else { ?>
+            <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
+        <?php } ?>
     </nav>
     <div class="container">
         <h2>Cadastro de Curso</h2>
@@ -32,6 +46,10 @@ $total = mysqli_num_rows($cursos);
             <div class="form-group">
                 <label for="nome">Nome do Curso:</label>
                 <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="nome">Semestre:</label>
+                <input type="text" class="form-control" id="semestre" name="semestre" required>
             </div>
             <div class="form-group">
                 <label for="descricao">Descrição:</label>
@@ -42,22 +60,33 @@ $total = mysqli_num_rows($cursos);
                     <label for="duracao">Duração (em meses):</label>
                     <input type="number" class="form-control" id="duracao" name="duracao" required>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="faculdade">Faculdade:</label>
-                    <Select name="id_faculdade" class="form-control" id="id_faculdade">
-                    <option value=''>Selecione faculdade</option>
-                    <?php
-                    // se o número de resultados for maior que zero, mostra os dados
-                    if ($total > 0) {
-                        while ($linha = mysqli_fetch_assoc($cursos)) {
-                    ?>                     
-                    <option value='<?= $linha['id'] ?>'><?= $linha['nome'] ?></option>
-                    <?php } 
-                    } ?>                        
-                    </Select>
+                <?php if ($dadosUsuario) {
+                    echo "<input type='hidden' name='id_faculdade' value='" . $dadosFaculdade['id'] . "'>";
+                } else { ?>
+                    <div class="form-group col-md-6">
+                        <label for="faculdade">Faculdade:</label>
+                        <Select name="id_faculdade" class="form-control" id="id_faculdade">
+                            <option value=''>Selecione faculdade</option>
+                            <?php
+                            // se o número de resultados for maior que zero, mostra os dados
+                            if ($total > 0) {
+                                while ($linha = mysqli_fetch_assoc($faculdades)) {
+                                    ?>
+                                    <option value='<?= $linha['id'] ?>'><?= $linha['nome'] ?></option>
+                                <?php }
+                            } ?>
+                        </Select>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="form-row justify-content-center">
+                <div class="form-group mr-3">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-danger" onclick="history.go(-1);">VOLTAR</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
         </form>
     </div>
 </body>

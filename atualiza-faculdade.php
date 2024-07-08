@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
     </nav>
     <div class="container">
@@ -46,6 +46,10 @@
                 echo "<div class='form-group'>";
                 echo "<label for='nome'>Nome da Faculdade:</label>";
                 echo "<input type='text' class='form-control' id='nome' name='nome' value='" . $row["nome"] . "' required>";
+                echo "</div>";
+                echo "<div class='form-group'>";
+                echo "<label for='cnpj'>CNPJ:</label>";
+                echo "<input type='text' class='form-control' id='cnpj' name='cnpj' value='" . $row["cnpj"] . "' required>";
                 echo "</div>";
                 echo "<fieldset>";
                 echo "<legend class='form-group'>Endereço:</legend>";
@@ -93,7 +97,14 @@
                 echo "</div>";
                 echo "</div>";
                 echo "</fieldset>";
-                echo "<button type='submit' class='btn btn-primary'>Atualizar</button>";
+                echo "<div class='form-row justify-content-center mt-4'>";
+                echo "<div class='form-group mr-3'>";
+                echo "<button type='submit' class='btn btn-primary'>ATUALIZAR</button>";
+                echo "</div>";
+                echo "<div class='form-group'>";
+                echo "<a class='btn btn-danger' onclick='history.go(-1);'>VOLTAR</a>";
+                echo "</div>";
+                echo "</div>";
                 echo "</form>";
             } else {
                 echo "Nenhuma faculdade encontrada com o ID fornecido.";
