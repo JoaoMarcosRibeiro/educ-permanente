@@ -16,7 +16,11 @@ if ($name == "" || $name == null  || $email == "" || $email == null || $password
 
     if ($Controle->cadastrarUsuario($name, $email, $password)) {
         echo '<script>alert("Usuário cadastrado com sucesso!");
+<<<<<<< HEAD
             window.location="../../index";</script>';
+=======
+            window.location="../../usuarios";</script>';
+>>>>>>> 043020a37cd50a98f040d86ec0575b3b69ba1916
     } else {
         echo '<script>alert("Nome de usuário já existe!");
             window.location="../../cadastro-usuario";</script>';
