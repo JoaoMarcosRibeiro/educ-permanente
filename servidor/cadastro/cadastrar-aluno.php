@@ -45,7 +45,7 @@ if ($_FILES["arquivos"]) { // Verifica se algum arquivo foi enviado
 $Controle = new Controle();
 
 if ($Controle->cadastrarAluno($nome, $email, $telefone, $dataNascimento, $id_faculdade, $cpf, $rg, $caminhos_arquivos)) {
-    echo '<script>alert("Aluno cadastrado com sucesso!"); window.location="../../aluno"; </script>';
+    echo '<script>alert("Aluno cadastrado com sucesso!"); window.location="../../alunos"; </script>';
 } else {
     echo '<script>alert("Erro no cadastro"); window.location="../../cadastro-aluno";</script>';
 }

@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">        
         <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
     </nav>
     <div class="container">
@@ -78,7 +78,14 @@
                     </div>
                 </div>
             </fieldset>
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <div class="form-row justify-content-center">
+                <div class="form-group mr-3">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-danger" onclick="history.go(-1);">VOLTAR</button>
+                </div>
+            </div>
         </form>
     </div>
 </body>

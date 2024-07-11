@@ -1,3 +1,20 @@
+<?php session_start();
+$email = $_SESSION['email'];
+
+include "classes/ConexaoBanco.php";
+
+$conexaobanco = new ConexaoBanco();
+
+$conexao = $conexaobanco->conectar();
+
+$sqlUsuario = "SELECT * FROM usuarios WHERE email = '$email'";
+$usuario = mysqli_query($conexao, $sqlUsuario);
+$dadosUsuario = mysqli_fetch_assoc($usuario);
+
+if (!$dadosUsuario) {
+    header("location:login");
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -14,16 +31,16 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
     </nav>
     <div class="container">
-        <h2>Lista de Alunos</h2>
+        <h2>Lista de Cursos</h2>
         <!-- Botão de cadastrar -->
         <div class="row justify-content-end mb-3">
             <div class="col-auto">
-                <a href="cadastro-aluno" class="btn btn-primary">
-                    <i class="fas fa-plus-circle mr-1"></i> Cadastrar Novo Aluno
+                <a href="cadastro-curso" class="btn btn-primary">
+                    <i class="fas fa-plus-circle mr-1"></i> Cadastrar Novo Curso
                 </a>
             </div>
         </div>
@@ -31,18 +48,14 @@
             <thead>
                 <tr>
                     <th scope="col">Nome</th>
-                    <th scope="col">Curso</th>
+                    <th scope="col">Faculdade</th>
+                    <th scope="col">Semestre</th>
                     <th scope="col">Ações</th>
                     <!-- Adicione outras colunas conforme necessário -->
                 </tr>
             </thead>
             <tbody>
                 <?php
-                include "classes/ConexaoBanco.php";
-
-                $conexaobanco = new ConexaoBanco();
-
-                $conexao = $conexaobanco->conectar();
 
                 // Número de registros por página
                 $registros_por_pagina = 10;
@@ -54,7 +67,7 @@
                 $offset = ($pagina_atual - 1) * $registros_por_pagina;
 
                 // Consulta SQL para obter os dados com paginação
-                $sql = "SELECT * FROM Alunos LIMIT $registros_por_pagina OFFSET $offset";
+                $sql = "SELECT * FROM Cursos  LIMIT $registros_por_pagina OFFSET $offset";
                 $result = $conexao->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -62,17 +75,13 @@
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . $row["nome"] . "</td>";
-                        $id_curso = $row["curso_id"];
-                        $sqlCurso = "SELECT * FROM cursos WHERE id = '$id_curso'";
-                        $curso = mysqli_query($conexao, $sqlCurso);
-                        $nomeCurso = mysqli_fetch_assoc($curso);
-                        echo "<td>" . $nomeCurso["nome"] . "</td>";
-                        echo "<td><a href='atualiza-aluno.php?id=" . $row["id"] . "'><i class='fas fa-edit'></i></a>";
-                        $caminho_arquivo = $row["arquivo"];
-                        // Verifica se o arquivo existe no servidor
-                        if (!empty($caminho_arquivo)) {
-                            echo "<a style='margin-left: 10px;' href='aluno-dados?id=" . $row["id"] . "'><i class='far fa-file-pdf'></i></a></td>";
-                        }
+                        $id_faculdade = $row["faculdade_id"];
+                        $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$id_faculdade'";
+                        $faculdade = mysqli_query($conexao, $sqlFaculdade);
+                        $nomeFaculdade = mysqli_fetch_assoc($faculdade);
+                        echo "<td>" . $nomeFaculdade["nome"] . "</td>";
+                        echo "<td>" . $row["semestre"] . "</td>";
+                        echo "<td><a href='atualiza-curso.php?id=" . $row["id"] . "'><i class='fas fa-edit'></i></a></td>";
                         echo "</tr>";
                     }
                 } else {
@@ -84,7 +93,7 @@
         <!-- Paginação -->
         <?php
         // Consulta SQL para contar o total de registros
-        $sql_total = "SELECT COUNT(*) AS total FROM Alunos";
+        $sql_total = "SELECT COUNT(*) AS total FROM Cursos";
         $resultado = $conexao->query($sql_total);
         $total_registros = $resultado->fetch_assoc()['total'];
 

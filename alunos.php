@@ -21,7 +21,7 @@ if (!$dadosUsuario) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Lista de Faculdades</title>
+    <title>Lista de Cursos</title>
     <link rel="shortcut icon" href="img/faculdade.png">
     <link href="styles/style.css" rel="stylesheet">
     <!-- Adicionando CSS do Bootstrap -->
@@ -35,20 +35,23 @@ if (!$dadosUsuario) {
         <a class="navbar-brand" href="index">EDUCAÇÃO PERMANENTE</a>
     </nav>
     <div class="container">
-        <h2>Lista de Faculdades</h2>
+        <h2>Lista de Alunos</h2>
         <!-- Botão de cadastrar -->
         <div class="row justify-content-end mb-3">
             <div class="col-auto">
-                <a href="cadastro-faculdade" class="btn btn-primary">
-                    <i class="fas fa-plus-circle mr-1"></i> Cadastrar Nova Faculdade
+                <a href="cadastro-aluno" class="btn btn-primary">
+                    <i class="fas fa-plus-circle mr-1"></i> Cadastrar Novo Aluno
                 </a>
             </div>
         </div>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Nome da Faculdade</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Curso</th>
+                    <th scope="col">Faculdade</th>
                     <th scope="col">Ações</th>
+                    <!-- Adicione outras colunas conforme necessário -->
                 </tr>
             </thead>
             <tbody>
@@ -63,29 +66,43 @@ if (!$dadosUsuario) {
                 $offset = ($pagina_atual - 1) * $registros_por_pagina;
 
                 // Consulta SQL para obter os dados com paginação
-                $sql = "SELECT * FROM Faculdades LIMIT $registros_por_pagina OFFSET $offset";
+                $sql = "SELECT * FROM Alunos LIMIT $registros_por_pagina OFFSET $offset";
                 $result = $conexao->query($sql);
 
                 if ($result->num_rows > 0) {
-                    // Loop para exibir cada faculdade em uma linha da tabela
+                    // Loop para exibir cada curso em uma linha da tabela
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . $row["nome"] . "</td>";
-                        echo "<td><a href='atualiza-faculdade.php?id=" . $row["id"] . "'><i class='fas fa-edit'></i></a> 
-                        <a href='faculdade-dados.php?id=" . $row["id"] . "'><i class='far fa-eye'></i></a></td>";
+                        $id_curso = $row["curso_id"];
+                        $sqlCurso = "SELECT * FROM cursos WHERE id = '$id_curso'";
+                        $curso = mysqli_query($conexao, $sqlCurso);
+                        $nomeCurso = mysqli_fetch_assoc($curso);
+
+                        $idFaculdade = $nomeCurso['faculdade_id'];
+                        $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$idFaculdade'";
+                        $faculdade = mysqli_query($conexao, $sqlFaculdade);
+                        $dadosFaculdade = mysqli_fetch_assoc($faculdade);
+
+                        echo "<td>" . $nomeCurso["nome"] . "</td>";
+                        echo "<td>" . $dadosFaculdade["nome"] . "</td>";
+                        echo "<td><a href='atualiza-aluno.php?id=" . $row["id"] . "'><i class='fas fa-edit'></i></a>";
+                        $caminho_arquivo = $row["arquivo"];
+
+                        echo "<a style='margin-left: 10px;' href='aluno-dados?id=" . $row["id"] . "'><i class='far fa-eye'></i></a></td>";
+
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='8'>Nenhuma faculdade encontrada</td></tr>";
+                    echo "<tr><td colspan='8'>Nenhum curso encontrado</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
-
         <!-- Paginação -->
         <?php
         // Consulta SQL para contar o total de registros
-        $sql_total = "SELECT COUNT(*) AS total FROM Faculdades";
+        $sql_total = "SELECT COUNT(*) AS total FROM Alunos";
         $resultado = $conexao->query($sql_total);
         $total_registros = $resultado->fetch_assoc()['total'];
 

@@ -46,16 +46,70 @@ class Controle extends ConexaoBanco
                 $mail->Host = 'smtp.office365.com';
                 $mail->SMTPAuth = true;
                 $mail->SMTPSecure = 'tls';
-                $mail->Username = 'setic@fhfs.ba.gov.br';
-                $mail->Password = 'cERBERUS@150';
+                $mail->Username = 'educacao.permanente@fhfs.ba.gov.br';
+                $mail->Password = 'Fh@7150';
                 $mail->Port = 587;
 
-                $mail->setFrom('setic@fhfs.ba.gov.br');
+                $mail->setFrom('educacao.permanente@fhfs.ba.gov.br');
                 $mail->addAddress($email);
                 $mail->isHTML(true);
-                $mail->Subject = 'Senha gerada para acesso ao portal';
-                $mail->Body = '
-                <b>Senha: </b>' . $senha;
+                $mail->Subject = 'Senha de acesso ao portal FHFS';
+                $conteudo = '
+                <style>
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        height: auto;
+                        margin: 0;
+                        font-family: Arial, sans-serif;
+                    }
+                    .senha {
+                        width: 100px;
+                        border: 2px solid #000;
+                        padding: 20px;
+                        text-align: center;
+                        margin-left: 120px;
+                    }
+                    .listas {
+                        padding: 0;
+                    }
+                    ul {
+                        list-style-type: disc;
+                        padding-left: 20px;
+                        text-align: left;
+                        padding: 0;
+                    }
+                </style>
+
+                <h2>Sua senha de acesso ao portal FHFS:</h2>
+                <div class="senha">
+                    '.$senha.'
+                </div>
+                
+                <div class="listas">
+                <h2>Documentos necessários:</h2>
+                <ul>
+                    <li>- Apólice de seguros</li>
+                    <li>- Termo de compromisso de estagio de cada estudante</li>
+                    <li>- Escala com os alunos e dias que os mesmos estarão na unidade</li>
+                </ul>
+
+                <h2>Documentos para ser anexados no cadastro dos alunos:</h2>
+                <ul>
+                    <li>- RG</li>
+                    <li>- CPF</li>
+                    <li>- Cartão de vacina atualizado (3 dozes de hepatite B, COVID, Reforço de DT)</li>
+                </ul>
+
+                <h2>Documentos para ser anexados no cadastro dos professores:</h2>
+                <ul>
+                    <li>- Carteira do conselho do professor</li>
+                    <li>- Cartão de vacina atualizado (3 dozes de hepatite B, COVID, Reforço de DT)</li>
+                </ul>
+                </div></b>';
+                $mail->Body = mb_convert_encoding($conteudo, 'ISO-8859-1', 'UTF-8');
                 $mail->send();
 
                 return true;
@@ -67,7 +121,7 @@ class Controle extends ConexaoBanco
 
     }
 
-    public function atualizarFaculdade($id, $nome, $cep, $logradouro, $numero, $complemento, $cidade, $estado, $telefone, $email)
+    public function atualizarFaculdade($id, $nome, $cnpj, $cep, $logradouro, $numero, $complemento, $cidade, $estado, $telefone, $email)
     {
         $conexao = parent::conectar();
         $sqlverifica = "SELECT * FROM faculdades WHERE nome = '$nome' AND id = '$id'";
@@ -76,7 +130,7 @@ class Controle extends ConexaoBanco
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE faculdades SET id = '$id', nome = '$nome', cep = '$cep', logradouro = '$logradouro', numero = '$numero', complemento = '$complemento'
+            $sql = "UPDATE faculdades SET id = '$id', nome = '$nome', cnpj = '$cnpj', cep = '$cep', logradouro = '$logradouro', numero = '$numero', complemento = '$complemento'
             , cidade = '$cidade', estado = '$estado'
             , telefone = '$telefone', email = '$email' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
@@ -88,14 +142,49 @@ class Controle extends ConexaoBanco
         }
     }
 
-    public function cadastrarCurso($nome, $descricao, $duracao, $id_faculdade)
+    public function resposta($id, $respostaEmail, $email)
+    {
+        $conexao = parent::conectar();
+        $sqlverifica = "SELECT * FROM faculdades WHERE resposta = '$respostaEmail' AND id = '$id'";
+        $resposta = mysqli_query($conexao, $sqlverifica);
+
+        if (mysqli_num_rows($resposta) > 1) {
+            return false;
+        } else {
+            $sql = "UPDATE faculdades SET id = '$id', resposta = '$respostaEmail' WHERE id = '$id'";
+            $resultado = mysqli_query($conexao, $sql);
+            if (!$resultado) {
+                return false;
+            } else {
+                $mail = new PHPMailer(true);
+                $mail->isSMTP();
+                $mail->Host = 'smtp.office365.com';
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = 'tls';
+                $mail->Username = 'educacao.permanente@fhfs.ba.gov.br';
+                $mail->Password = 'Fh@7150';
+                $mail->Port = 587;
+
+                $mail->setFrom('educacao.permanente@fhfs.ba.gov.br');
+                $mail->addAddress($email);
+                $mail->isHTML(true);
+                $mail->Subject = 'Retorno da Educação Permanente FHFS';
+                $mail->Body = $respostaEmail;
+                $mail->send();
+
+                return true;
+            }
+        }
+    }
+
+    public function cadastrarCurso($nome, $semestre, $descricao, $duracao, $id_faculdade)
     {
 
         $conexao = parent::conectar();
-        $sql = "INSERT INTO cursos (nome, descricao, duracao, faculdade_id) 
-        VALUES (?,?,?,?)";
+        $sql = "INSERT INTO cursos (nome, semestre,descricao, duracao, faculdade_id) 
+        VALUES (?,?,?,?,?)";
         $query = $conexao->prepare($sql);
-        $query->bind_param('ssss', $nome, $descricao, $duracao, $id_faculdade);
+        $query->bind_param('sssss', $nome, $semestre, $descricao, $duracao, $id_faculdade);
 
         if ($query->execute()) {
             return true;
@@ -105,7 +194,7 @@ class Controle extends ConexaoBanco
 
     }
 
-    public function atualizarCurso($id, $nome, $descricao, $duracao, $id_faculdade)
+    public function atualizarCurso($id, $nome, $semestre, $descricao, $duracao, $id_faculdade)
     {
         $conexao = parent::conectar();
         $sqlverifica = "SELECT * FROM cursos WHERE faculdade_id = '$id_faculdade' AND id = '$id'";
@@ -114,7 +203,7 @@ class Controle extends ConexaoBanco
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE cursos SET id = '$id', nome = '$nome', descricao = '$descricao', duracao = '$duracao', faculdade_id = '$id_faculdade' WHERE id = '$id'";
+            $sql = "UPDATE cursos SET id = '$id', nome = '$nome', semestre = '$semestre', descricao = '$descricao', duracao = '$duracao', faculdade_id = '$id_faculdade' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
             if (!$resultado) {
                 return false;
@@ -158,6 +247,22 @@ class Controle extends ConexaoBanco
             } else {
                 return true;
             }
+        }
+    }
+
+    public function cadastrarUsuario($name, $email, $password)
+    {
+        $conexao = parent::conectar();
+        $sqlverifica = "SELECT * FROM usuarios WHERE email = '$email'";
+        $resposta = mysqli_query($conexao, $sqlverifica);
+
+        if (mysqli_num_rows($resposta) > 0) {
+            return false;
+        } else {
+            $sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?)";
+            $query = $conexao->prepare($sql);
+            $query->bind_param('sss', $name, $email, $password);
+            return $query->execute();
         }
     }
 
@@ -252,7 +357,7 @@ class Controle extends ConexaoBanco
     }
 
 
-    public function autenticar($email, $password)
+    public function autenticarFaculdade($email, $password)
     {
         $conexao = parent::conectar();
         $passwordExistente = "";
@@ -274,53 +379,24 @@ class Controle extends ConexaoBanco
         }
     }
 
-    public function atualizarChamado($id, $id_usuario, $status, $infoimpressora, $resposta, $problema, $acompanhante, $atendimento, $setor, $nome, $descricao)
+
+    public function autenticarUsuario($email, $password)
     {
         $conexao = parent::conectar();
-        $sql = "UPDATE chamados SET id = '$id', id_usuario = '$id_usuario', status = '$status', infoimpressora = '$infoimpressora', resposta = '$resposta', problema = '$problema', acompanhante = '$acompanhante', atendimento = '$atendimento' 
-            WHERE id = '$id'";
-        $atualizado = mysqli_query($conexao, $sql);
+        $passwordExistente = "";
+        $sql = "SELECT * FROM usuarios WHERE email = '$email'";
+        $resposta = mysqli_query($conexao, $sql);
 
-        $sqlaltera = "INSERT INTO historico_chamado (status, infoimpressora, resposta, problema, id_chamado, id_usuario, acompanhante, atendimento) VALUES (?,?,?,?,?,?,?,?)";
-        $query = $conexao->prepare($sqlaltera);
-        $query->bind_param('ssssssss', $status, $infoimpressora, $resposta, $problema, $id, $id_usuario, $acompanhante, $atendimento);
+        if (mysqli_num_rows($resposta) > 0) {
+            $passwordExistente = mysqli_fetch_array($resposta);
+            $passwordExistente = $passwordExistente['senha'];
 
-        if ($atualizado && $query->execute()) {
-
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = 'smtp.office365.com';
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = 'tls';
-            $mail->Username = 'setic@fhfs.ba.gov.br';
-            $mail->Password = 'cERBERUS@150';
-            $mail->Port = 587;
-
-            $sqlEmail = "SELECT * FROM setores WHERE name = '$setor'";
-            $sqlEmailSetor = mysqli_query($conexao, $sqlEmail);
-            $emailSetor = mysqli_fetch_assoc($sqlEmailSetor);
-
-            $sqlUsuarioTipo = "SELECT * FROM usuarios WHERE id = '$id_usuario'";
-            $usuarioTipo = mysqli_query($conexao, $sqlUsuarioTipo);
-            $tipoUsuario = mysqli_fetch_assoc($usuarioTipo);
-
-
-            if ($sqlEmail == true) {
-                $mail->setFrom('setic@fhfs.ba.gov.br');
-                $mail->addAddress($emailSetor['email']);
-                $mail->isHTML(true);
-                $mail->Subject = 'Resposta de chamado SETIC';
-                $mail->Body = '
-                <b>Chamado aberto por: </b>' . $nome . '<br><br>
-                <b>Problema: </b>' . $descricao . '<br><br>
-                <b>Resposta: </b>' . $resposta . '<br><br>
-                <b>Status: </b>' . $status . '<br><br>
-                <b>Atendente: </b>' . $tipoUsuario['username'] . '<br><br>
-                Favor n&atilde;o responder este e-mail autom&aacute;tico.';
-                $mail->send();
+            if (password_verify($password, $passwordExistente)) {
+                $_SESSION['email'] = $email;
+                return true;
+            } else {
+                return false;
             }
-
-            return true;
         } else {
             return false;
         }
