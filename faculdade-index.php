@@ -1,8 +1,6 @@
 <?php session_start();
-if (!isset($_SESSION['email'])) {
-  header("location:login");
-}
 $email = $_SESSION['email'];
+
 include "classes/ConexaoBanco.php";
 
 $conexaobanco = new ConexaoBanco();
@@ -12,6 +10,15 @@ $conexao = $conexaobanco->conectar();
 $sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
 $faculdade = mysqli_query($conexao, $sqlFaculdade);
 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
+
+$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$usuario = mysqli_query($conexao, $sqlUsuario);
+$dadosUsuario = mysqli_fetch_assoc($usuario);
+
+if (!$dadosUsuario) {
+    header("location:login-faculdade");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -19,7 +26,7 @@ $dadosFaculdade = mysqli_fetch_assoc($faculdade);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Educação permanente</title>  
+  <title>Educação permanente</title>
   <link rel="shortcut icon" href="img/faculdade.png">
   <!-- Adicionando CSS do Bootstrap -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -65,39 +72,47 @@ $dadosFaculdade = mysqli_fetch_assoc($faculdade);
     }
 
     .list-group-item:nth-child(1) {
-      background-color: #007bff; /* Azul */
+      background-color: #007bff;
+      /* Azul */
       color: #ffffff;
     }
 
     .list-group-item:nth-child(2) {
-      background-color: #28a745; /* Verde */
+      background-color: #28a745;
+      /* Verde */
       color: #ffffff;
     }
 
     .list-group-item:nth-child(3) {
-      background-color: #dc3545; /* Vermelho */
+      background-color: #dc3545;
+      /* Vermelho */
       color: #ffffff;
     }
 
     .list-group-item:nth-child(4) {
-      background-color: #ffc107; /* Amarelo */
+      background-color: #ffc107;
+      /* Amarelo */
       color: #333333;
     }
 
     .list-group-item:nth-child(1):hover {
-      background-color: #0056b3; /* Azul mais escuro */
+      background-color: #0056b3;
+      /* Azul mais escuro */
     }
 
     .list-group-item:nth-child(2):hover {
-      background-color: #3cc23f; /* Verde mais escuro */
+      background-color: #3cc23f;
+      /* Verde mais escuro */
     }
 
     .list-group-item:nth-child(3):hover {
-      background-color: #b93134; /* Vermelho mais escuro */
+      background-color: #b93134;
+      /* Vermelho mais escuro */
     }
 
     .list-group-item:nth-child(4):hover {
-      background-color: #ffaa00; /* Amarelo mais escuro */
+      background-color: #ffaa00;
+      /* Amarelo mais escuro */
     }
   </style>
 </head>
@@ -107,10 +122,11 @@ $dadosFaculdade = mysqli_fetch_assoc($faculdade);
     <div class="menu">
       <h2>EDUCAÇÃO PERMANENTE</h2>
       <div class="list-group">
-        <a href="faculdade-dados?id=<?= $dadosFaculdade['id'] ?>" class="list-group-item list-group-item-action">MEUS DADOS</a>
-        <a href="curso" class="list-group-item list-group-item-action">MEUS CURSOS</a>
-        <a href="aluno" class="list-group-item list-group-item-action">MEUS ALUNOS</a>
-        <a href="#" class="list-group-item list-group-item-action">Opção 4</a>
+        <a href="faculdade-dados?id=<?= $dadosFaculdade['id'] ?>" class="list-group-item list-group-item-action">MEUS
+          DADOS</a>
+        <a href="cursos-faculdade" class="list-group-item list-group-item-action">MEUS CURSOS</a>
+        <a href="alunos-faculdade" class="list-group-item list-group-item-action">MEUS ALUNOS</a>
+        <a href="servidor/login/logout-faculdade.php" class="list-group-item list-group-item-action">SAIR</a>
       </div>
     </div>
   </div>
