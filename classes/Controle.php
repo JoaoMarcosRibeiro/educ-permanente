@@ -161,11 +161,25 @@ class Controle extends ConexaoBanco
                 $mail->Host = 'smtp.office365.com';
                 $mail->SMTPAuth = true;
                 $mail->SMTPSecure = 'tls';
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 8417b3bf450d71397bde31fe053962322af213ec
                 $mail->Username = 'educacao.permanente@fhfs.ba.gov.br';
                 $mail->Password = 'Fh@7150';
                 $mail->Port = 587;
 
                 $mail->setFrom('educacao.permanente@fhfs.ba.gov.br');
+<<<<<<< HEAD
+=======
+=======
+                $mail->Username = 'setic@fhfs.ba.gov.br';
+                $mail->Password = 'cERBERUS@150';
+                $mail->Port = 587;
+
+                $mail->setFrom('setic@fhfs.ba.gov.br');
+>>>>>>> 043020a37cd50a98f040d86ec0575b3b69ba1916
+>>>>>>> 8417b3bf450d71397bde31fe053962322af213ec
                 $mail->addAddress($email);
                 $mail->isHTML(true);
                 $mail->Subject = 'Retorno da Educação Permanente FHFS';
