@@ -84,15 +84,17 @@ if (!$dadosUsuario) {
     }
 
     .list-group-item:nth-child(3) {
-      background-color: #dc3545;
-      /* Vermelho */
+      background-color: #f59042; 
+      color: #ffffff;
+    }
+    .list-group-item:nth-child(4) {
+      background-color: #7004fd; 
       color: #ffffff;
     }
 
-    .list-group-item:nth-child(4) {
-      background-color: #ffc107;
-      /* Amarelo */
-      color: #333333;
+    .list-group-item:nth-child(5) {
+      background-color: #dc3545; /* Vermelho */
+      color: #ffffff;
     }
 
     .list-group-item:nth-child(1):hover {
@@ -106,13 +108,14 @@ if (!$dadosUsuario) {
     }
 
     .list-group-item:nth-child(3):hover {
-      background-color: #b93134;
-      /* Vermelho mais escuro */
+      background-color: #f27b1f;
+    }
+    .list-group-item:nth-child(4):hover {
+      background-color: #3b0383; 
     }
 
-    .list-group-item:nth-child(4):hover {
-      background-color: #ffaa00;
-      /* Amarelo mais escuro */
+    .list-group-item:nth-child(5):hover {
+      background-color: #b93134; /* Vermelho mais escuro */
     }
   </style>
 </head>
@@ -126,6 +129,7 @@ if (!$dadosUsuario) {
           DADOS</a>
         <a href="cursos-faculdade" class="list-group-item list-group-item-action">MEUS CURSOS</a>
         <a href="alunos-faculdade" class="list-group-item list-group-item-action">MEUS ALUNOS</a>
+        <a href="professores-faculdade" class="list-group-item list-group-item-action">MEUS PROFESSORES</a>
         <a href="servidor/login/logout-faculdade.php" class="list-group-item list-group-item-action">SAIR</a>
       </div>
     </div>

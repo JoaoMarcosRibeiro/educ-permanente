@@ -13,5 +13,5 @@ if ($email == "" || $email == null) {
     header("Location:../../faculdade-index");
 } else {
     echo '<script>alert("E-mail ou senha incorreta!");
-    window.location="../../login";</script>';
+    window.location="../../login-faculdade";</script>';
 }

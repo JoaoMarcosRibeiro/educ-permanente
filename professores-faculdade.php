@@ -30,7 +30,7 @@ $offset = ($pagina_atual - 1) * $registros_por_pagina;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Lista de Alunos</title>
+    <title>Lista de Professores</title>
     <link rel="shortcut icon" href="img/faculdade.png">
     <link href="styles/style.css" rel="stylesheet">
     <!-- Adicionando CSS do Bootstrap -->
@@ -44,12 +44,12 @@ $offset = ($pagina_atual - 1) * $registros_por_pagina;
         <a class="navbar-brand" href="faculdade-index">PAGINA INICIAL</a>
     </nav>
     <div class="container">
-        <h2>Lista de Alunos</h2>
+        <h2>Lista de Professores</h2>
         <!-- Botão de cadastrar -->
         <div class="row justify-content-end mb-3">
             <div class="col-auto">
-                <a href="cadastro-aluno" class="btn btn-primary">
-                    <i class="fas fa-plus-circle mr-1"></i> Cadastrar Novo Aluno
+                <a href="cadastro-professor" class="btn btn-primary">
+                    <i class="fas fa-plus-circle mr-1"></i> Cadastrar Novo Professor
                 </a>
             </div>
         </div>
@@ -77,7 +77,7 @@ $offset = ($pagina_atual - 1) * $registros_por_pagina;
 
 
                     // Consulta SQL para obter os dados com paginação
-                    $sql = "SELECT * FROM alunos WHERE curso_id = '$cursosId' LIMIT $registros_por_pagina OFFSET $offset";
+                    $sql = "SELECT * FROM professores WHERE curso_id = '$cursosId' LIMIT $registros_por_pagina OFFSET $offset";
                     $result = $conexao->query($sql);
 
                     if ($result->num_rows > 0) {
@@ -90,27 +90,26 @@ $offset = ($pagina_atual - 1) * $registros_por_pagina;
                             $curso = mysqli_query($conexao, $sqlCurso);
                             $nomeCurso = mysqli_fetch_assoc($curso);
                             echo "<td>" . $nomeCurso["nome"] . "</td>";
-                            echo "<td><a href='atualiza-aluno.php?id=" . $row["id"] . "'><i class='fas fa-edit'></i></a>";
+                            echo "<td><a href='atualiza-professor.php?id=" . $row["id"] . "'><i class='fas fa-edit'></i></a>";
                             $caminho_arquivo = $row["arquivo"];
-                            echo "<a style='margin-left: 10px;' href='aluno-dados?id=" . $row["id"] . "'><i class='far fa-eye'></i></a></td>";
+                            echo "<a style='margin-left: 10px;' href='professor-dados?id=" . $row["id"] . "'><i class='far fa-eye'></i></a></td>";
                             echo "</tr>";
                         }
-                    }
+                    } 
                 }
-                $sql = "SELECT * FROM Alunos";
+                $sql = "SELECT * FROM Professores";
                 $total = $conexao->query($sql);
 
                 if ($total->num_rows === 0) {
                     echo "<tr><td colspan='8'>Nenhum aluno encontrado</td></tr>";
                 }
-
                 ?>
             </tbody>
         </table>
         <!-- Paginação -->
         <?php
         // Consulta SQL para contar o total de registros
-        $sql_total = "SELECT COUNT(*) AS total FROM Alunos";
+        $sql_total = "SELECT COUNT(*) AS total FROM Professores";
         $resultado = $conexao->query($sql_total);
         $total_registros = $resultado->fetch_assoc()['total'];
 

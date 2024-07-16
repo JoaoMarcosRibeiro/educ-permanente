@@ -49,24 +49,24 @@ $total = mysqli_num_rows($cursos);
     <div class="container">
         <h2>Atualizar Cadastro</h2>
         <?php
-        // Verifica se o ID do aluno foi passado via GET
+        // Verifica se o ID do professor foi passado via GET
         if (isset($_GET['id']) && !empty($_GET['id'])) {
-            $aluno_id = $_GET['id'];
+            $professor_id = $_GET['id'];
 
-            // Consulta SQL para obter os dados do aluno com o ID fornecido
-            $sqlAlunos = "SELECT * FROM Alunos WHERE id = $aluno_id";
-            $result = $conexao->query($sqlAlunos);
+            // Consulta SQL para obter os dados do professor com o ID fornecido
+            $sqlProfessores = "SELECT * FROM Professores WHERE id = $professor_id";
+            $result = $conexao->query($sqlProfessores);
 
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
                 // Exibir o formulário de atualização com os dados preenchidos
-                echo "<form action='servidor/cadastro/atualizar-aluno.php' method='post'>";
+                echo "<form action='servidor/cadastro/atualizar-professor.php' method='post'>";
                 echo "<input type='hidden' name='id' value='" . $row["id"] . "'>";
                 if ($dadosUsuario) {
                     echo "<input type='hidden' name='email-faculdade' value='" . $email . "'>";
                 }
                 echo "<div class='form-group'>";
-                echo "<label for='nome'>Nome do Aluno:</label>";
+                echo "<label for='nome'>Nome do Professor:</label>";
                 echo "<input type='text' class='form-control' id='nome' name='nome' value='" . $row["nome"] . "' required>";
                 echo "</div>";
                 echo "<div class='form-row'>";

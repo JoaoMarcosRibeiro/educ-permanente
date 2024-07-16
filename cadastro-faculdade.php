@@ -83,7 +83,7 @@
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-danger" onclick="history.go(-1);">VOLTAR</button>
+                    <a class="btn btn-danger" onclick="history.go(-1);">VOLTAR</a>
                 </div>
             </div>
         </form>

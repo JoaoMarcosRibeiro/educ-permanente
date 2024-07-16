@@ -10,13 +10,21 @@ $id_curso = $_POST['id_curso'];
 $cpf = $_POST['cpf'];
 $rg = $_POST['rg'];
 
+$emailFaculdade = isset($_POST['email-faculdade']);
+
 
 $Controle = new Controle();
 
 if ($Controle->atualizarAluno($id, $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg)) {
-    echo '<script>alert("Aluno atualizado com sucesso!");
-            window.location="../../aluno";</script>';
+    if($emailFaculdade){
+        echo '<script>alert("Aluno atualizado com sucesso!");
+        window.location="../../alunos-faculdade";</script>';
+    }else {
+        echo '<script>alert("Aluno atualizado com sucesso!");
+            window.location="../../alunos";</script>';
+    }
+    
 } else {
     echo '<script>alert("Aluno ja foi cadastrado! ");
-            window.location="../../aluno";</script>';
+            window.location="../../alunos";</script>';
 }

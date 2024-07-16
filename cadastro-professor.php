@@ -32,7 +32,7 @@ $total = mysqli_num_rows($cursos);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Cadastro de Aluno</title>
+    <title>Cadastro de Professor</title>
     <link rel="shortcut icon" href="img/faculdade.png">
     <link href="styles/style.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -47,14 +47,15 @@ $total = mysqli_num_rows($cursos);
         <?php } ?>
     </nav>
     <div class="container">
-        <h2>Cadastro de Aluno</h2>
-        <form id="cadastro-form" action="servidor/cadastro/cadastrar-aluno" method="post" enctype="multipart/form-data">
+        <h2>Cadastro de Professor</h2>
+        <form id="cadastro-form" action="servidor/cadastro/cadastrar-professor" method="post"
+            enctype="multipart/form-data">
             <?php if ($dadosUsuario) {
                 echo "<input type='hidden' name='email-faculdade' value='" . $email . "'>";
             }
             ?>
             <div class=" form-group">
-                <label for="nome">Nome do Aluno:</label>
+                <label for="nome">Nome do Professor:</label>
                 <input type="text" class="form-control" id="nome" name="nome" required>
             </div>
             <div class="form-row">
@@ -87,7 +88,7 @@ $total = mysqli_num_rows($cursos);
                                 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
                                 ?>
                                 <option value='<?= $linha['id'] ?>'>
-                                    <?= $linha['nome'], "-" . $linha['semestre'], " (" . $dadosFaculdade['nome'] . ")" ?>
+                                    <?= $linha['nome'], "-" . $linha['semestre'], "(" . $dadosFaculdade['nome'] . ")" ?>
                                 </option>
                                 <?php ;
                             }

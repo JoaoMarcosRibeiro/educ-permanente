@@ -61,7 +61,7 @@ if (!$dadosUsuario) {
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-danger" onclick="history.go(-1);">VOLTAR</button>
+                    <a type="submit" class="btn btn-danger" onclick="history.go(-1);">VOLTAR</a>
                 </div>
             </div>
         </form>

@@ -250,6 +250,43 @@ class Controle extends ConexaoBanco
         }
     }
 
+    public function cadastrarProfessor($nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg, $caminhos_arquivos)
+    {
+
+        $conexao = parent::conectar();
+        $sql = "INSERT INTO professores (nome, email, telefone, data_nascimento, curso_id, cpf, rg, arquivo) 
+        VALUES (?,?,?,?,?,?,?,?)";
+        $query = $conexao->prepare($sql);
+        $query->bind_param('ssssssss', $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg, $caminhos_arquivos);
+
+        if ($query->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public function atualizarProfessor($id, $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg)
+    {
+        $conexao = parent::conectar();
+        $sqlverifica = "SELECT * FROM professores WHERE nome = '$nome' AND id = '$id'";
+        $resposta = mysqli_query($conexao, $sqlverifica);
+
+        if (mysqli_num_rows($resposta) > 1) {
+            return false;
+        } else {
+            $sql = "UPDATE professores SET id = '$id', nome = '$nome', email = '$email', telefone = '$telefone', data_nascimento = '$dataNascimento', curso_id = '$id_curso'
+            , cpf = '$cpf', rg = '$rg' WHERE id = '$id'";
+            $resultado = mysqli_query($conexao, $sql);
+            if (!$resultado) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
     public function cadastrarUsuario($name, $email, $password)
     {
         $conexao = parent::conectar();
@@ -302,6 +339,51 @@ class Controle extends ConexaoBanco
         // Atualiza o campo no banco de dados com a nova lista de arquivos
         $atualizaArquivos = implode(",", $arquivosExistente);
         $sql = "UPDATE alunos SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+        $resultado = mysqli_query($conexao, $sql);
+
+        if ($resultado) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function arquivoProfessor($id, $caminhos_arquivos)
+    {
+        // Validação de Entrada
+        if (!is_numeric($id) || empty($caminhos_arquivos)) {
+            return false;
+        }
+
+        $conexao = parent::conectar();
+
+        if (!$conexao) {
+            return false;
+        }
+
+        // Recupera os arquivos existentes da faculdade
+        $sqlProfessor = "SELECT arquivo FROM professores WHERE id = '$id'";
+        $resposta = mysqli_query($conexao, $sqlProfessor);
+
+        if (!$resposta || mysqli_num_rows($resposta) == 0) {
+            return false;
+        }
+
+        $arquivosProfessor = mysqli_fetch_assoc($resposta);
+        $arquivosExistente = explode(",", $arquivosProfessor['arquivo']);
+
+        // Adiciona o novo arquivo à lista de arquivos existentes
+        $arquivosExistente[] = $caminhos_arquivos;
+
+        // Remove elementos vazios do array resultante
+        $arquivosExistente = array_filter($arquivosExistente);
+
+        // Remove duplicatas e reindexa o array
+        $arquivosExistente = array_values(array_unique($arquivosExistente));
+
+        // Atualiza o campo no banco de dados com a nova lista de arquivos
+        $atualizaArquivos = implode(",", $arquivosExistente);
+        $sql = "UPDATE professores SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
         $resultado = mysqli_query($conexao, $sql);
 
         if ($resultado) {
@@ -489,6 +571,56 @@ class Controle extends ConexaoBanco
             // Atualiza o campo no banco de dados com a nova lista de arquivos
             $atualizaArquivos = implode(",", $arquivosExistente);
             $sql = "UPDATE alunos SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+            $resultado = mysqli_query($conexao, $sql);
+
+            if ($resultado) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // O arquivo não foi encontrado na lista de arquivos
+            return false;
+        }
+    }
+
+    public function removeArquivoProfessor($id, $arquivo)
+    {
+        // Validação de Entrada
+        if (!is_numeric($id) || empty($arquivo)) {
+            return false;
+        }
+
+        $conexao = parent::conectar();
+
+        if (!$conexao) {
+            return false;
+        }
+
+        // Recupera os arquivos existentes da faculdade
+        $sqlProfessor = "SELECT arquivo FROM professores WHERE id = '$id'";
+        $resposta = mysqli_query($conexao, $sqlProfessor);
+
+        if (!$resposta || mysqli_num_rows($resposta) == 0) {
+            return false;
+        }
+
+        $arquivosProfessor = mysqli_fetch_assoc($resposta);
+        $arquivosExistente = explode(",", $arquivosProfessor['arquivo']);
+
+        // Verifica se o arquivo existe na lista de arquivos
+        $index = array_search($arquivo, $arquivosExistente);
+
+        if ($index !== false) {
+            // Remove o arquivo da lista de arquivos existentes
+            unset($arquivosExistente[$index]);
+
+            // Remove possíveis vírgulas extras no início e no final da lista
+            $arquivosExistente = array_values($arquivosExistente);
+
+            // Atualiza o campo no banco de dados com a nova lista de arquivos
+            $atualizaArquivos = implode(",", $arquivosExistente);
+            $sql = "UPDATE professores SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
 
             if ($resultado) {

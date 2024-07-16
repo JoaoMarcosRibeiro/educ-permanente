@@ -94,7 +94,7 @@ if (!$dadosUsuario) {
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='8'>Nenhum curso encontrado</td></tr>";
+                    echo "<tr><td colspan='8'>Nenhum aluno encontrado</td></tr>";
                 }
                 ?>
             </tbody>

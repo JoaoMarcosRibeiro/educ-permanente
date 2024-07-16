@@ -82,11 +82,16 @@ if (!$dadosUsuario) {
     }
 
     .list-group-item:nth-child(4) {
+      background-color: #7004fd; 
+      color: #ffffff;
+    }
+
+    .list-group-item:nth-child(5) {
       background-color: #ffc107; /* Amarelo */
       color: #333333;
     }
 
-    .list-group-item:nth-child(5) {
+    .list-group-item:nth-child(6) {
       background-color: #dc3545; /* Vermelho */
       color: #ffffff;
     }
@@ -104,9 +109,13 @@ if (!$dadosUsuario) {
     }
 
     .list-group-item:nth-child(4):hover {
+      background-color: #3b0383; 
+    }
+
+    .list-group-item:nth-child(5):hover {
       background-color: #ffaa00; /* Amarelo mais escuro */
     }
-    .list-group-item:nth-child(5):hover {
+    .list-group-item:nth-child(6):hover {
       background-color: #b93134; /* Vermelho mais escuro */
     }
   </style>
@@ -120,6 +129,7 @@ if (!$dadosUsuario) {
         <a href="faculdade" class="list-group-item list-group-item-action">FACULDADE</a>
         <a href="cursos" class="list-group-item list-group-item-action">CURSOS</a>
         <a href="alunos" class="list-group-item list-group-item-action">ALUNOS</a>
+        <a href="professores" class="list-group-item list-group-item-action">PROFESSORES</a>
         <a href="cadastro-usuario" class="list-group-item list-group-item-action">CADASTRAR USUÁRIO</a>
         <a href="servidor/login/logout.php" class="list-group-item list-group-item-action">SAIR</a>
       </div>

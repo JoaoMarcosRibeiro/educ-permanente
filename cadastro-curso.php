@@ -43,6 +43,10 @@ $dadosUsuario = mysqli_fetch_assoc($usuario);
     <div class="container">
         <h2>Cadastro de Curso</h2>
         <form id="cadastro-form" action="servidor/cadastro/cadastrar-curso" method="post">
+            <?php if ($dadosUsuario) {
+                    echo "<input type='hidden' name='email-faculdade' value='" . $email . "'>";
+                }
+            ?>
             <div class="form-group">
                 <label for="nome">Nome do Curso:</label>
                 <input type="text" class="form-control" id="nome" name="nome" required>
@@ -84,7 +88,7 @@ $dadosUsuario = mysqli_fetch_assoc($usuario);
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-danger" onclick="history.go(-1);">VOLTAR</button>
+                    <a class="btn btn-danger" onclick="history.go(-1);">VOLTAR</a>
                 </div>
             </div>
         </form>

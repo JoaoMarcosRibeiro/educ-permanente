@@ -46,13 +46,12 @@ if ($_FILES["arquivos"]) { // Verifica se algum arquivo foi enviado
 
 $Controle = new Controle();
 
-if ($Controle->cadastrarAluno($nome, $email, $telefone, $dataNascimento, $id_faculdade, $cpf, $rg, $caminhos_arquivos)) {
+if ($Controle->cadastrarProfessor($nome, $email, $telefone, $dataNascimento, $id_faculdade, $cpf, $rg, $caminhos_arquivos)) {
     if($emailFaculdade){
-        echo '<script>alert("Aluno cadastrado com sucesso!"); window.location="../../alunos-faculdade"; </script>';
+        echo '<script>alert("Professor cadastrado com sucesso!"); window.location="../../professores-faculdade"; </script>';
     }else {
-        echo '<script>alert("Aluno cadastrado com sucesso!"); window.location="../../alunos"; </script>';
+        echo '<script>alert("Professor cadastrado com sucesso!"); window.location="../../professores"; </script>';
     }
-    
 } else {
-    echo '<script>alert("Erro no cadastro"); window.location="../../cadastro-aluno";</script>';
+    echo '<script>alert("Erro no cadastro"); window.location="../../cadastro-professor";</script>';
 }
