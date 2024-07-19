@@ -100,13 +100,13 @@ class Controle extends ConexaoBanco
                 <ul>
                     <li>- RG</li>
                     <li>- CPF</li>
-                    <li>- Cartão de vacina atualizado (3 dozes de hepatite B, COVID, Reforço de DT)</li>
+                    <li>- Cartão de vacina atualizado (3 doses de hepatite B, 3 doses de COVID, Reforço de dT)</li>
                 </ul>
 
                 <h2>Documentos para ser anexados no cadastro dos professores:</h2>
                 <ul>
                     <li>- Carteira do conselho do professor</li>
-                    <li>- Cartão de vacina atualizado (3 dozes de hepatite B, COVID, Reforço de DT)</li>
+                    <li>- Cartão de vacina atualizado (3 doses de hepatite B, 3 doses de COVID, Reforço de dT)</li>
                 </ul>
                 </div></b>';
                 $mail->Body = mb_convert_encoding($conteudo, 'ISO-8859-1', 'UTF-8');
