@@ -35,7 +35,7 @@
             $conexao = $conexaobanco->conectar();
 
             // Consulta SQL para obter os dados da faculdade com o ID fornecido
-            $sql = "SELECT * FROM Faculdades WHERE id = $faculdade_id";
+            $sql = "SELECT * FROM ed_faculdades WHERE id = $faculdade_id";
             $result = $conexao->query($sql);
 
             if ($result->num_rows > 0) {

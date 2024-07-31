@@ -7,19 +7,19 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
+$sqlFaculdade = "SELECT * FROM ed_faculdades WHERE email = '$email'";
 $faculdade = mysqli_query($conexao, $sqlFaculdade);
 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
 
-$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios_faculdade WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 
 if ($dadosFaculdade) {
     $idFaculdade = $dadosFaculdade['id'];
-    $sql = "SELECT * FROM cursos WHERE faculdade_id = '$idFaculdade' ORDER BY nome ASC ";
+    $sql = "SELECT * FROM ed_cursos WHERE faculdade_id = '$idFaculdade' ORDER BY nome ASC ";
 } else {
-    $sql = "SELECT * FROM cursos ORDER BY nome ASC";
+    $sql = "SELECT * FROM ed_cursos ORDER BY nome ASC";
 }
 
 $cursos = mysqli_query($conexao, $sql);
@@ -82,7 +82,7 @@ $total = mysqli_num_rows($cursos);
                         if ($total > 0) {
                             while ($linha = mysqli_fetch_assoc($cursos)) {
                                 $idFaculdade = $linha['faculdade_id'];
-                                $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$idFaculdade'";
+                                $sqlFaculdade = "SELECT * FROM ed_faculdades WHERE id = '$idFaculdade'";
                                 $faculdade = mysqli_query($conexao, $sqlFaculdade);
                                 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
                                 ?>

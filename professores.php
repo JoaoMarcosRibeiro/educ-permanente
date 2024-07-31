@@ -7,7 +7,7 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sqlUsuario = "SELECT * FROM usuarios WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 
@@ -66,7 +66,7 @@ if (!$dadosUsuario) {
                 $offset = ($pagina_atual - 1) * $registros_por_pagina;
 
                 // Consulta SQL para obter os dados com paginação
-                $sql = "SELECT * FROM Professores LIMIT $registros_por_pagina OFFSET $offset";
+                $sql = "SELECT * FROM ed_professores LIMIT $registros_por_pagina OFFSET $offset";
                 $result = $conexao->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -75,12 +75,12 @@ if (!$dadosUsuario) {
                         echo "<tr>";
                         echo "<td>" . $row["nome"] . "</td>";
                         $id_curso = $row["curso_id"];
-                        $sqlCurso = "SELECT * FROM cursos WHERE id = '$id_curso'";
+                        $sqlCurso = "SELECT * FROM ed_cursos WHERE id = '$id_curso'";
                         $curso = mysqli_query($conexao, $sqlCurso);
                         $nomeCurso = mysqli_fetch_assoc($curso);
 
                         $idFaculdade = $nomeCurso['faculdade_id'];
-                        $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$idFaculdade'";
+                        $sqlFaculdade = "SELECT * FROM ed_faculdades WHERE id = '$idFaculdade'";
                         $faculdade = mysqli_query($conexao, $sqlFaculdade);
                         $dadosFaculdade = mysqli_fetch_assoc($faculdade);
 
@@ -102,7 +102,7 @@ if (!$dadosUsuario) {
         <!-- Paginação -->
         <?php
         // Consulta SQL para contar o total de registros
-        $sql_total = "SELECT COUNT(*) AS total FROM Professores";
+        $sql_total = "SELECT COUNT(*) AS total FROM ed_professores";
         $resultado = $conexao->query($sql_total);
         $total_registros = $resultado->fetch_assoc()['total'];
 

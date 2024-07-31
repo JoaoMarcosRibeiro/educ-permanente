@@ -7,19 +7,19 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
+$sqlFaculdade = "SELECT * FROM ed_faculdades WHERE email = '$email'";
 $faculdade = mysqli_query($conexao, $sqlFaculdade);
 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
 
-$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios_faculdade WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 
 if ($dadosFaculdade) {
     $idFaculdade = $dadosFaculdade['id'];
-    $sql = "SELECT * FROM cursos WHERE faculdade_id = '$idFaculdade' ORDER BY nome ASC ";
+    $sql = "SELECT * FROM ed_cursos WHERE faculdade_id = '$idFaculdade' ORDER BY nome ASC ";
 } else {
-    $sql = "SELECT * FROM cursos ORDER BY nome ASC";
+    $sql = "SELECT * FROM ed_cursos ORDER BY nome ASC";
 }
 
 $cursos = mysqli_query($conexao, $sql);
@@ -54,7 +54,7 @@ $total = mysqli_num_rows($cursos);
             $professor_id = $_GET['id'];
 
             // Consulta SQL para obter os dados do professor com o ID fornecido
-            $sqlProfessores = "SELECT * FROM Professores WHERE id = $professor_id";
+            $sqlProfessores = "SELECT * FROM ed_professores WHERE id = $professor_id";
             $result = $conexao->query($sqlProfessores);
 
             if ($result->num_rows > 0) {
@@ -88,11 +88,11 @@ $total = mysqli_num_rows($cursos);
                 echo "<label for='curso'>Curso:</label>";
                 echo "<Select name='id_curso' class='form-control' id='id_curso'>";
                 $id_curso = $row["curso_id"];
-                $sqlCurso = "SELECT * FROM cursos WHERE id = '$id_curso'";
+                $sqlCurso = "SELECT * FROM ed_cursos WHERE id = '$id_curso'";
                 $curso = mysqli_query($conexao, $sqlCurso);
                 $nomeCurso = mysqli_fetch_assoc($curso);
                 $idFaculdade = $nomeCurso['faculdade_id'];
-                $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$idFaculdade'";
+                $sqlFaculdade = "SELECT * FROM ed_faculdades WHERE id = '$idFaculdade'";
                 $faculdade = mysqli_query($conexao, $sqlFaculdade);
                 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
                 echo "<option value='" . $row["curso_id"] . "'>" . $nomeCurso['nome'] . "-" . $nomeCurso['semestre'] . "(" . $dadosFaculdade['nome'] . ")</option>";
@@ -100,7 +100,7 @@ $total = mysqli_num_rows($cursos);
                 if ($total > 0) {
                     while ($linha = mysqli_fetch_assoc($cursos)) {
                         $idFaculdade = $linha['faculdade_id'];
-                        $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$idFaculdade'";
+                        $sqlFaculdade = "SELECT * FROM ed_faculdades WHERE id = '$idFaculdade'";
                         $faculdade = mysqli_query($conexao, $sqlFaculdade);
                         $dadosFaculdade = mysqli_fetch_assoc($faculdade);
                         $idCurso = $linha['id'];

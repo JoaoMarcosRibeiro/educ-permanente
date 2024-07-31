@@ -7,15 +7,15 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sql = "SELECT * FROM faculdades ORDER BY nome ASC";
+$sql = "SELECT * FROM ed_faculdades ORDER BY nome ASC";
 $faculdades = mysqli_query($conexao, $sql);
 $total = mysqli_num_rows($faculdades);
 
-$sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
+$sqlFaculdade = "SELECT * FROM ed_faculdades WHERE email = '$email'";
 $faculdade = mysqli_query($conexao, $sqlFaculdade);
 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
 
-$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios_faculdade WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 

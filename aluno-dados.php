@@ -10,12 +10,12 @@ $id_aluno = $_GET['id'];
 $conexao_banco = new ConexaoBanco();
 $conexao = $conexao_banco->conectar();
 
-$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios_faculdade WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 
 // Consulta para recuperar os dados do aluno
-$sql_aluno = "SELECT * FROM alunos WHERE id = $id_aluno";
+$sql_aluno = "SELECT * FROM ed_alunos WHERE id = $id_aluno";
 $resultado_aluno = mysqli_query($conexao, $sql_aluno);
 $aluno = mysqli_fetch_assoc($resultado_aluno);
 
@@ -29,13 +29,13 @@ if (!empty($aluno['arquivo'])) {
 }
 
 $id_curso = $aluno["curso_id"];
-$sqlCurso = "SELECT * FROM cursos WHERE id = '$id_curso'";
+$sqlCurso = "SELECT * FROM ed_cursos WHERE id = '$id_curso'";
 $curso = mysqli_query($conexao, $sqlCurso);
 $nomeCurso = mysqli_fetch_assoc($curso);
 $idCurso = $nomeCurso['id'];
 
 // Consulta para recuperar os dados da faculdade
-$sql = "SELECT * FROM faculdades WHERE id = '$idCurso'";
+$sql = "SELECT * FROM ed_faculdades WHERE id = '$idCurso'";
 $resultado = mysqli_query($conexao, $sql);
 $faculdade = mysqli_fetch_assoc($resultado);
 

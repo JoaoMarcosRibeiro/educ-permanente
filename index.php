@@ -7,7 +7,7 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sqlUsuario = "SELECT * FROM usuarios WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 

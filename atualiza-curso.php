@@ -7,11 +7,11 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sqlFaculdade = "SELECT * FROM faculdades WHERE email = '$email'";
+$sqlFaculdade = "SELECT * FROM ed_faculdades WHERE email = '$email'";
 $faculdade = mysqli_query($conexao, $sqlFaculdade);
 $dadosFaculdade = mysqli_fetch_assoc($faculdade);
 
-$sqlUsuario = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios_faculdade WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 ?>
@@ -42,12 +42,12 @@ $dadosUsuario = mysqli_fetch_assoc($usuario);
         if (isset($_GET['id']) && !empty($_GET['id'])) {
             $aluno_id = $_GET['id'];
 
-            $sqlcursos = "SELECT * FROM faculdades ORDER BY nome ASC";
+            $sqlcursos = "SELECT * FROM ed_faculdades ORDER BY nome ASC";
             $cursos = mysqli_query($conexao, $sqlcursos);
             $total = mysqli_num_rows($cursos);
 
             // Consulta SQL para obter os dados do curso com o ID fornecido
-            $sql = "SELECT * FROM Cursos WHERE id = $aluno_id";
+            $sql = "SELECT * FROM ed_cursos WHERE id = $aluno_id";
             $result = $conexao->query($sql);
 
             if ($result->num_rows > 0) {
@@ -82,7 +82,7 @@ $dadosUsuario = mysqli_fetch_assoc($usuario);
                     echo "<label for='faculdade'>Faculdade:</label>";
                     echo "<Select name='id_faculdade' class='form-control' id='id_faculdade'>";
                     $id_faculdade = $row["faculdade_id"];
-                    $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$id_faculdade'";
+                    $sqlFaculdade = "SELECT * FROM ed_faculdades WHERE id = '$id_faculdade'";
                     $faculdade = mysqli_query($conexao, $sqlFaculdade);
                     $nomeFaculdade = mysqli_fetch_assoc($faculdade);
                     echo "<option value='" . $row["faculdade_id"] . "'>" . $nomeFaculdade['nome'] . "</option>";

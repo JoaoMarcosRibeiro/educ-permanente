@@ -7,7 +7,7 @@ $conexaobanco = new ConexaoBanco();
 
 $conexao = $conexaobanco->conectar();
 
-$sqlUsuario = "SELECT * FROM usuarios WHERE email = '$email'";
+$sqlUsuario = "SELECT * FROM ed_usuarios WHERE email = '$email'";
 $usuario = mysqli_query($conexao, $sqlUsuario);
 $dadosUsuario = mysqli_fetch_assoc($usuario);
 
@@ -67,7 +67,7 @@ if (!$dadosUsuario) {
                 $offset = ($pagina_atual - 1) * $registros_por_pagina;
 
                 // Consulta SQL para obter os dados com paginação
-                $sql = "SELECT * FROM Cursos  LIMIT $registros_por_pagina OFFSET $offset";
+                $sql = "SELECT * FROM ed_cursos  LIMIT $registros_por_pagina OFFSET $offset";
                 $result = $conexao->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -76,7 +76,7 @@ if (!$dadosUsuario) {
                         echo "<tr>";
                         echo "<td>" . $row["nome"] . "</td>";
                         $id_faculdade = $row["faculdade_id"];
-                        $sqlFaculdade = "SELECT * FROM faculdades WHERE id = '$id_faculdade'";
+                        $sqlFaculdade = "SELECT * FROM ed_faculdades WHERE id = '$id_faculdade'";
                         $faculdade = mysqli_query($conexao, $sqlFaculdade);
                         $nomeFaculdade = mysqli_fetch_assoc($faculdade);
                         echo "<td>" . $nomeFaculdade["nome"] . "</td>";
@@ -93,7 +93,7 @@ if (!$dadosUsuario) {
         <!-- Paginação -->
         <?php
         // Consulta SQL para contar o total de registros
-        $sql_total = "SELECT COUNT(*) AS total FROM Cursos";
+        $sql_total = "SELECT COUNT(*) AS total FROM ed_cursos";
         $resultado = $conexao->query($sql_total);
         $total_registros = $resultado->fetch_assoc()['total'];
 
