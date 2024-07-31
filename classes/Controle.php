@@ -26,7 +26,7 @@ class Controle extends ConexaoBanco
         }
 
         $conexao = parent::conectar();
-        $sql = "INSERT INTO faculdades (nome, cep, logradouro, numero, complemento, cidade, estado, telefone, email) 
+        $sql = "INSERT INTO ed_faculdades (nome, cep, logradouro, numero, complemento, cidade, estado, telefone, email) 
         VALUES (?,?,?,?,?,?,?,?,?)";
         $query = $conexao->prepare($sql);
         $query->bind_param('sssssssss', $nome, $cep, $logradouro, $numero, $complemento, $cidade, $estado, $telefone, $email);
@@ -35,7 +35,7 @@ class Controle extends ConexaoBanco
 
             $senha = gerarSenha();
             $senha_faculdade = password_hash($senha, PASSWORD_DEFAULT);
-            $sql_senha = "INSERT INTO usuarios_faculdade (nome, email, senha) VALUES (?,?,?)";
+            $sql_senha = "INSERT INTO ed_usuarios_faculdade (nome, email, senha) VALUES (?,?,?)";
             $query_senha = $conexao->prepare($sql_senha);
             $query_senha->bind_param('sss', $nome, $email, $senha_faculdade);
 
@@ -100,13 +100,13 @@ class Controle extends ConexaoBanco
                 <ul>
                     <li>- RG</li>
                     <li>- CPF</li>
-                    <li>- Cartão de vacina atualizado (3 dozes de hepatite B, COVID, Reforço de DT)</li>
+                    <li>- Cartão de vacina atualizado (3 doses de hepatite B, 3 doses de COVID, Reforço de dT)</li>
                 </ul>
 
                 <h2>Documentos para ser anexados no cadastro dos professores:</h2>
                 <ul>
                     <li>- Carteira do conselho do professor</li>
-                    <li>- Cartão de vacina atualizado (3 dozes de hepatite B, COVID, Reforço de DT)</li>
+                    <li>- Cartão de vacina atualizado (3 doses de hepatite B, 3 doses de COVID, Reforço de dT)</li>
                 </ul>
                 </div></b>';
                 $mail->Body = mb_convert_encoding($conteudo, 'ISO-8859-1', 'UTF-8');
@@ -124,13 +124,13 @@ class Controle extends ConexaoBanco
     public function atualizarFaculdade($id, $nome, $cnpj, $cep, $logradouro, $numero, $complemento, $cidade, $estado, $telefone, $email)
     {
         $conexao = parent::conectar();
-        $sqlverifica = "SELECT * FROM faculdades WHERE nome = '$nome' AND id = '$id'";
+        $sqlverifica = "SELECT * FROM ed_faculdades WHERE nome = '$nome' AND id = '$id'";
         $resposta = mysqli_query($conexao, $sqlverifica);
 
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE faculdades SET id = '$id', nome = '$nome', cnpj = '$cnpj', cep = '$cep', logradouro = '$logradouro', numero = '$numero', complemento = '$complemento'
+            $sql = "UPDATE ed_faculdades SET id = '$id', nome = '$nome', cnpj = '$cnpj', cep = '$cep', logradouro = '$logradouro', numero = '$numero', complemento = '$complemento'
             , cidade = '$cidade', estado = '$estado'
             , telefone = '$telefone', email = '$email' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
@@ -145,13 +145,13 @@ class Controle extends ConexaoBanco
     public function resposta($id, $respostaEmail, $email)
     {
         $conexao = parent::conectar();
-        $sqlverifica = "SELECT * FROM faculdades WHERE resposta = '$respostaEmail' AND id = '$id'";
+        $sqlverifica = "SELECT * FROM ed_faculdades WHERE resposta = '$respostaEmail' AND id = '$id'";
         $resposta = mysqli_query($conexao, $sqlverifica);
 
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE faculdades SET id = '$id', resposta = '$respostaEmail' WHERE id = '$id'";
+            $sql = "UPDATE ed_faculdades SET id = '$id', resposta = '$respostaEmail' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
             if (!$resultado) {
                 return false;
@@ -181,7 +181,7 @@ class Controle extends ConexaoBanco
     {
 
         $conexao = parent::conectar();
-        $sql = "INSERT INTO cursos (nome, semestre,descricao, duracao, faculdade_id) 
+        $sql = "INSERT INTO ed_cursos (nome, semestre,descricao, duracao, faculdade_id) 
         VALUES (?,?,?,?,?)";
         $query = $conexao->prepare($sql);
         $query->bind_param('sssss', $nome, $semestre, $descricao, $duracao, $id_faculdade);
@@ -197,13 +197,13 @@ class Controle extends ConexaoBanco
     public function atualizarCurso($id, $nome, $semestre, $descricao, $duracao, $id_faculdade)
     {
         $conexao = parent::conectar();
-        $sqlverifica = "SELECT * FROM cursos WHERE faculdade_id = '$id_faculdade' AND id = '$id'";
+        $sqlverifica = "SELECT * FROM ed_cursos WHERE faculdade_id = '$id_faculdade' AND id = '$id'";
         $resposta = mysqli_query($conexao, $sqlverifica);
 
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE cursos SET id = '$id', nome = '$nome', semestre = '$semestre', descricao = '$descricao', duracao = '$duracao', faculdade_id = '$id_faculdade' WHERE id = '$id'";
+            $sql = "UPDATE ed_cursos SET id = '$id', nome = '$nome', semestre = '$semestre', descricao = '$descricao', duracao = '$duracao', faculdade_id = '$id_faculdade' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
             if (!$resultado) {
                 return false;
@@ -217,7 +217,7 @@ class Controle extends ConexaoBanco
     {
 
         $conexao = parent::conectar();
-        $sql = "INSERT INTO alunos (nome, email, telefone, data_nascimento, curso_id, cpf, rg, arquivo) 
+        $sql = "INSERT INTO ed_alunos (nome, email, telefone, data_nascimento, curso_id, cpf, rg, arquivo) 
         VALUES (?,?,?,?,?,?,?,?)";
         $query = $conexao->prepare($sql);
         $query->bind_param('ssssssss', $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg, $caminhos_arquivos);
@@ -233,13 +233,13 @@ class Controle extends ConexaoBanco
     public function atualizarAluno($id, $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg)
     {
         $conexao = parent::conectar();
-        $sqlverifica = "SELECT * FROM alunos WHERE nome = '$nome' AND id = '$id'";
+        $sqlverifica = "SELECT * FROM ed_alunos WHERE nome = '$nome' AND id = '$id'";
         $resposta = mysqli_query($conexao, $sqlverifica);
 
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE alunos SET id = '$id', nome = '$nome', email = '$email', telefone = '$telefone', data_nascimento = '$dataNascimento', curso_id = '$id_curso'
+            $sql = "UPDATE ed_alunos SET id = '$id', nome = '$nome', email = '$email', telefone = '$telefone', data_nascimento = '$dataNascimento', curso_id = '$id_curso'
             , cpf = '$cpf', rg = '$rg' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
             if (!$resultado) {
@@ -254,7 +254,7 @@ class Controle extends ConexaoBanco
     {
 
         $conexao = parent::conectar();
-        $sql = "INSERT INTO professores (nome, email, telefone, data_nascimento, curso_id, cpf, rg, arquivo) 
+        $sql = "INSERT INTO ed_professores (nome, email, telefone, data_nascimento, curso_id, cpf, rg, arquivo) 
         VALUES (?,?,?,?,?,?,?,?)";
         $query = $conexao->prepare($sql);
         $query->bind_param('ssssssss', $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg, $caminhos_arquivos);
@@ -270,13 +270,13 @@ class Controle extends ConexaoBanco
     public function atualizarProfessor($id, $nome, $email, $telefone, $dataNascimento, $id_curso, $cpf, $rg)
     {
         $conexao = parent::conectar();
-        $sqlverifica = "SELECT * FROM professores WHERE nome = '$nome' AND id = '$id'";
+        $sqlverifica = "SELECT * FROM ed_professores WHERE nome = '$nome' AND id = '$id'";
         $resposta = mysqli_query($conexao, $sqlverifica);
 
         if (mysqli_num_rows($resposta) > 1) {
             return false;
         } else {
-            $sql = "UPDATE professores SET id = '$id', nome = '$nome', email = '$email', telefone = '$telefone', data_nascimento = '$dataNascimento', curso_id = '$id_curso'
+            $sql = "UPDATE ed_professores SET id = '$id', nome = '$nome', email = '$email', telefone = '$telefone', data_nascimento = '$dataNascimento', curso_id = '$id_curso'
             , cpf = '$cpf', rg = '$rg' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
             if (!$resultado) {
@@ -290,13 +290,13 @@ class Controle extends ConexaoBanco
     public function cadastrarUsuario($name, $email, $password)
     {
         $conexao = parent::conectar();
-        $sqlverifica = "SELECT * FROM usuarios WHERE email = '$email'";
+        $sqlverifica = "SELECT * FROM ed_usuarios WHERE email = '$email'";
         $resposta = mysqli_query($conexao, $sqlverifica);
 
         if (mysqli_num_rows($resposta) > 0) {
             return false;
         } else {
-            $sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?,?,?)";
+            $sql = "INSERT INTO ed_usuarios (nome, email, senha) VALUES (?,?,?)";
             $query = $conexao->prepare($sql);
             $query->bind_param('sss', $name, $email, $password);
             return $query->execute();
@@ -317,7 +317,7 @@ class Controle extends ConexaoBanco
         }
 
         // Recupera os arquivos existentes da faculdade
-        $sqlAluno = "SELECT arquivo FROM alunos WHERE id = '$id'";
+        $sqlAluno = "SELECT arquivo FROM ed_alunos WHERE id = '$id'";
         $resposta = mysqli_query($conexao, $sqlAluno);
 
         if (!$resposta || mysqli_num_rows($resposta) == 0) {
@@ -338,7 +338,7 @@ class Controle extends ConexaoBanco
 
         // Atualiza o campo no banco de dados com a nova lista de arquivos
         $atualizaArquivos = implode(",", $arquivosExistente);
-        $sql = "UPDATE alunos SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+        $sql = "UPDATE ed_alunos SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
         $resultado = mysqli_query($conexao, $sql);
 
         if ($resultado) {
@@ -362,7 +362,7 @@ class Controle extends ConexaoBanco
         }
 
         // Recupera os arquivos existentes da faculdade
-        $sqlProfessor = "SELECT arquivo FROM professores WHERE id = '$id'";
+        $sqlProfessor = "SELECT arquivo FROM ed_professores WHERE id = '$id'";
         $resposta = mysqli_query($conexao, $sqlProfessor);
 
         if (!$resposta || mysqli_num_rows($resposta) == 0) {
@@ -383,7 +383,7 @@ class Controle extends ConexaoBanco
 
         // Atualiza o campo no banco de dados com a nova lista de arquivos
         $atualizaArquivos = implode(",", $arquivosExistente);
-        $sql = "UPDATE professores SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+        $sql = "UPDATE ed_professores SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
         $resultado = mysqli_query($conexao, $sql);
 
         if ($resultado) {
@@ -407,7 +407,7 @@ class Controle extends ConexaoBanco
         }
 
         // Recupera os arquivos existentes da faculdade
-        $sqlFaculdade = "SELECT arquivo FROM faculdades WHERE id = '$id'";
+        $sqlFaculdade = "SELECT arquivo FROM ed_faculdades WHERE id = '$id'";
         $resposta = mysqli_query($conexao, $sqlFaculdade);
 
         if (!$resposta || mysqli_num_rows($resposta) == 0) {
@@ -428,7 +428,7 @@ class Controle extends ConexaoBanco
 
         // Atualiza o campo no banco de dados com a nova lista de arquivos
         $atualizaArquivos = implode(",", $arquivosExistente);
-        $sql = "UPDATE faculdades SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+        $sql = "UPDATE ed_faculdades SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
         $resultado = mysqli_query($conexao, $sql);
 
         if ($resultado) {
@@ -443,7 +443,7 @@ class Controle extends ConexaoBanco
     {
         $conexao = parent::conectar();
         $passwordExistente = "";
-        $sql = "SELECT * FROM usuarios_faculdade WHERE email = '$email'";
+        $sql = "SELECT * FROM ed_usuarios_faculdade WHERE email = '$email'";
         $resposta = mysqli_query($conexao, $sql);
 
         if (mysqli_num_rows($resposta) > 0) {
@@ -466,7 +466,7 @@ class Controle extends ConexaoBanco
     {
         $conexao = parent::conectar();
         $passwordExistente = "";
-        $sql = "SELECT * FROM usuarios WHERE email = '$email'";
+        $sql = "SELECT * FROM ed_usuarios WHERE email = '$email'";
         $resposta = mysqli_query($conexao, $sql);
 
         if (mysqli_num_rows($resposta) > 0) {
@@ -498,7 +498,7 @@ class Controle extends ConexaoBanco
         }
 
         // Recupera os arquivos existentes da faculdade
-        $sqlFaculdade = "SELECT arquivo FROM faculdades WHERE id = '$id'";
+        $sqlFaculdade = "SELECT arquivo FROM ed_faculdades WHERE id = '$id'";
         $resposta = mysqli_query($conexao, $sqlFaculdade);
 
         if (!$resposta || mysqli_num_rows($resposta) == 0) {
@@ -520,7 +520,7 @@ class Controle extends ConexaoBanco
 
             // Atualiza o campo no banco de dados com a nova lista de arquivos
             $atualizaArquivos = implode(",", $arquivosExistente);
-            $sql = "UPDATE faculdades SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+            $sql = "UPDATE ed_faculdades SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
 
             if ($resultado) {
@@ -548,7 +548,7 @@ class Controle extends ConexaoBanco
         }
 
         // Recupera os arquivos existentes da faculdade
-        $sqlAluno = "SELECT arquivo FROM alunos WHERE id = '$id'";
+        $sqlAluno = "SELECT arquivo FROM ed_alunos WHERE id = '$id'";
         $resposta = mysqli_query($conexao, $sqlAluno);
 
         if (!$resposta || mysqli_num_rows($resposta) == 0) {
@@ -570,7 +570,7 @@ class Controle extends ConexaoBanco
 
             // Atualiza o campo no banco de dados com a nova lista de arquivos
             $atualizaArquivos = implode(",", $arquivosExistente);
-            $sql = "UPDATE alunos SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+            $sql = "UPDATE ed_alunos SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
 
             if ($resultado) {
@@ -598,7 +598,7 @@ class Controle extends ConexaoBanco
         }
 
         // Recupera os arquivos existentes da faculdade
-        $sqlProfessor = "SELECT arquivo FROM professores WHERE id = '$id'";
+        $sqlProfessor = "SELECT arquivo FROM ed_professores WHERE id = '$id'";
         $resposta = mysqli_query($conexao, $sqlProfessor);
 
         if (!$resposta || mysqli_num_rows($resposta) == 0) {
@@ -620,7 +620,7 @@ class Controle extends ConexaoBanco
 
             // Atualiza o campo no banco de dados com a nova lista de arquivos
             $atualizaArquivos = implode(",", $arquivosExistente);
-            $sql = "UPDATE professores SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
+            $sql = "UPDATE ed_professores SET arquivo = '$atualizaArquivos' WHERE id = '$id'";
             $resultado = mysqli_query($conexao, $sql);
 
             if ($resultado) {
